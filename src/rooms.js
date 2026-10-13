@@ -367,17 +367,16 @@ export function furnish(kit, furn, ceil, labels) {
     // écran d'information
     const tv = grp(furn, 7.05, 1.35, 7.075, 0); F.monitor(kit, tv, { w: 0.7, kind: 'chart', stand: false });
     // coin attente (côté est, couloir ouest laissé libre vers entretien / pause)
-    const sf = grp(furn, 9.35, 0, 9.65, -PI / 2); F.sofa(kit, sf, { w: 1.4, mat: 'fabricGrey' }); C(9.35, 9.65, 0.8, 1.45, 0, 'canape');
-    const ct2 = grp(furn, 8.35, 0, 9.65, 0); F.coffeeTable(kit, ct2, { r: 0.35 }); C(8.35, 9.65, 0.7, 0.7, 0, 'table basse');
+    // seating rangé le long des murs : couloir central libre entre l'entrée, le couloir et les portes latérales
+    const sf = grp(furn, 4.27, 0, 9.6, PI / 2); F.sofa(kit, sf, { w: 1.1, mat: 'fabricGrey' }); C(4.27, 9.6, 0.85, 1.1, 0, 'canapé');
     const a1 = grp(furn, 5.2, 0, 11.4, PI); F.armchair(kit, a1, 'fabricGrey'); C(5.2, 11.4, 0.8, 0.8, 0, 'fauteuil');
-    const a3 = grp(furn, 8.4, 0, 11.4, PI); F.armchair(kit, a3, 'fabricGrey'); C(8.4, 11.4, 0.8, 0.8, 0, 'fauteuil');
-    const a2 = grp(furn, 7.45, 0, 9.65, PI / 2); F.armchair(kit, a2, 'fabricGrey'); C(7.45, 9.65, 0.8, 0.8, 0, 'fauteuil');
-    const rug = new THREE.Mesh(new THREE.PlaneGeometry(2.4, 1.9), M.fabricAnth); rug.rotation.x = -PI / 2; rug.position.set(8.4, 0.006, 9.65); rug.receiveShadow = true; furn.add(rug);
-    put(F.floorLamp, 5.0, 10.0, 0); C(5.0, 10.0, 0.3, 0.3, 0, 'lampadaire');
+    const a2 = grp(furn, 9.35, 0, 9.65, -PI / 2); F.armchair(kit, a2, 'fabricGrey'); C(9.35, 9.65, 0.8, 0.8, 0, 'fauteuil');
+    const rug = new THREE.Mesh(new THREE.PlaneGeometry(1.9, 1.9), M.fabricAnth); rug.rotation.x = -PI / 2; rug.position.set(4.85, 0.006, 9.6); rug.receiveShadow = true; furn.add(rug);
+    put(F.floorLamp, 9.5, 10.15, 0); C(9.5, 10.15, 0.3, 0.3, 0, 'lampadaire');
     // plantes (grandes, comme sur le plan)
     put(F.plant, 4.2, 11.55, 0, { h: 1.9, kind: 'ficus' }); C(4.2, 11.55, 0.5, 0.5, 0, 'plante');
     put(F.plant, 7.25, 7.45, 0, { h: 1.5, kind: 'palm' }); C(7.25, 7.45, 0.4, 0.4, 0, 'plante');
-    put(F.plant, 9.45, 11.55, 0, { h: 1.7, kind: 'ficus' }); C(9.45, 11.55, 0.5, 0.5, 0, 'plante');
+    put(F.plant, 9.45, 11.62, 0, { h: 1.7, kind: 'ficus' }); C(9.45, 11.62, 0.5, 0.5, 0, 'plante');
     // décors muraux
     art(9.72, 1.55, 9.65, -PI / 2, 4, 0.9, 0.62);
     art(3.88, 1.55, 9.3, PI / 2, 6, 0.9, 0.62);
@@ -387,7 +386,7 @@ export function furnish(kit, furn, ceil, labels) {
     lamp(5.0, 8.0, { w: 0.7, d: 0.7, power: 1.0, warm: true });
     lamp(6.7, 8.0, { w: 0.7, d: 0.7, power: 1.0, warm: true });
     lamp(5.2, 10.2, { w: 0.9, d: 0.9, power: 1.2, warm: true });
-    lamp(8.2, 10.4, { w: 0.9, d: 0.9, power: 1.1, warm: true });
+    lamp(8.4, 10.4, { w: 0.9, d: 0.9, power: 1.1, warm: true });
     lamp(6.9, 11.2, { w: 0.7, d: 0.7, power: 1.0, warm: true });
     for (const t of [0.2, 0.5, 0.8]) { const p = curve.getPoint(t); cyl(ceil, 0.01, 0.01, 0.5, M.black, p.x, WALL_H - 0.5, p.z, 6, false); cyl(ceil, 0.14, 0.14, 0.14, M.led, p.x, WALL_H - 0.62, p.z, 18, false).userData.glow = true; }
   }
