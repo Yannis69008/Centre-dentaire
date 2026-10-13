@@ -1,0 +1,16 @@
+{
+  "name": "visite-3d-centre-dentaire",
+  "version": "1.0.0",
+  "description": "Visite virtuelle 3D interactive d'un centre dentaire de 4 dentistes (Three.js)",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "node server.mjs",
+    "verify": "node scripts/verify.mjs",
+    "test": "node scripts/e2e.mjs"
+  },
+  "dependencies": {
+    "three": "file:vendor/three"
+  },
+  "license": "MIT"
+}

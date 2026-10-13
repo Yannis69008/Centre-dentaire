@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Centre dentaire — Visite 3D</title>
+  <meta name="description" content="Visite virtuelle 3D interactive d'un centre dentaire de quatre dentistes : salles de soins, imagerie, stérilisation, accueil.">
+  <link rel="stylesheet" href="style.css">
+  <script type="importmap">
+  { "imports": {
+      "three": "./vendor/three/three.module.js",
+      "three/addons/": "./vendor/three/addons/"
+  } }
+  </script>
+</head>
+<body data-mode="visit">
+  <canvas id="scene" tabindex="0" aria-label="Visite 3D du centre dentaire"></canvas>
+
+  <div id="loading" role="status">
+    <div class="load-card">
+      <div class="logo" aria-hidden="true">
+        <svg viewBox="0 0 64 64" width="44" height="44"><path d="M32 8c-5-4-16-3-19 6-2 7 1 13 3 20 2 8 3 22 8 22 4 0 4-12 8-12s4 12 8 12c5 0 6-14 8-22 2-7 5-13 3-20-3-9-14-10-19-6z" fill="none" stroke="currentColor" stroke-width="3.2" stroke-linejoin="round"/></svg>
+      </div>
+      <h1>Centre dentaire</h1>
+      <p class="sub">Préparation de la visite 3D…</p>
+      <div class="bar"><i id="load-bar"></i></div>
+      <p id="load-msg" class="small">Chargement…</p>
+      <noscript><p class="small">JavaScript est nécessaire pour afficher la visite.</p></noscript>
+    </div>
+  </div>
+
+  <div id="fatal" hidden role="alert">
+    <div class="load-card">
+      <h2>Erreur</h2>
+      <p></p>
+      <p class="small">Si le problème persiste, ouvrez la console du navigateur (F12) pour plus de détails.</p>
+    </div>
+  </div>
+
+  <div id="start" hidden>
+    <div class="start-card">
+      <p class="eyebrow">Visite virtuelle · avant-projet</p>
+      <h1>Centre dentaire<br><span>4 praticiens · ≈ 200 m²</span></h1>
+      <p class="lead">Parcourez le cabinet comme si vous y étiez : entrez dans les salles de soins, l'imagerie, la stérilisation et découvrez les équipements.</p>
+      <ul class="keys">
+        <li><kbd>Z</kbd><kbd>Q</kbd><kbd>S</kbd><kbd>D</kbd> <em>ou</em> <kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd><span>se déplacer</span></li>
+        <li><kbd>Souris</kbd><span>regarder autour de soi</span></li>
+        <li><kbd>E</kbd> <em>ou clic</em><span>ouvrir / fermer une porte</span></li>
+        <li><kbd>Maj</kbd><span>marcher plus vite</span></li>
+        <li><kbd>V</kbd><span>vue aérienne</span></li>
+        <li><kbd>Échap</kbd><span>libérer la souris</span></li>
+      </ul>
+      <button id="start-btn" type="button">Commencer la visite</button>
+      <p class="small">Plan indicatif à adapter au local réel. Les protections radiologiques sont représentées à titre illustratif, sans dimensionnement réglementaire.</p>
+    </div>
+  </div>
+
+  <div id="hud" hidden>
+    <div id="room-chip" aria-live="polite"></div>
+    <div id="crosshair" aria-hidden="true"></div>
+    <div id="prompt"></div>
+    <div id="toast" role="status"></div>
+    <button id="resume" type="button" hidden>Cliquez sur la scène pour reprendre la visite</button>
+
+    <button id="panel-toggle" type="button" title="Menu (Tab)" aria-label="Afficher ou masquer le menu">☰</button>
+    <aside id="panel">
+      <header>
+        <h2>Centre dentaire</h2>
+        <p>Visite 3D · 4 praticiens</p>
+      </header>
+
+      <section>
+        <h3>Mode</h3>
+        <div class="seg">
+          <button type="button" data-mode="visit" class="on">Visite libre</button>
+          <button type="button" data-mode="aerial">Vue aérienne</button>
+        </div>
+        <p id="mode-hint" class="hint"></p>
+      </section>
+
+      <section>
+        <h3>Aller à</h3>
+        <div id="tp-grid" class="grid"></div>
+      </section>
+
+      <section>
+        <h3>Affichage</h3>
+        <label class="sw"><input type="checkbox" data-toggle="roof" checked><span></span>Toit et plafonds</label>
+        <label class="sw"><input type="checkbox" data-toggle="walls" checked><span></span>Cloisons et portes</label>
+        <label class="sw"><input type="checkbox" data-toggle="labels" checked><span></span>Étiquettes des pièces</label>
+        <label class="sw"><input type="checkbox" data-toggle="autodoors" checked><span></span>Portes automatiques</label>
+      </section>
+
+      <section>
+        <h3>Ambiance</h3>
+        <div class="seg">
+          <button type="button" data-night="0" class="on">☀ Jour</button>
+          <button type="button" data-night="1">☾ Nuit</button>
+        </div>
+      </section>
+
+      <section>
+        <h3>Qualité graphique</h3>
+        <div class="seg three">
+          <button type="button" data-quality="high">Élevée</button>
+          <button type="button" data-quality="medium">Moyenne</button>
+          <button type="button" data-quality="low">Éco</button>
+        </div>
+      </section>
+
+      <footer>Raccourcis : <kbd>V</kbd> vue aérienne · <kbd>N</kbd> jour/nuit · <kbd>T</kbd> toit · <kbd>M</kbd> mini-plan · <kbd>Tab</kbd> menu</footer>
+    </aside>
+
+    <div id="map-card">
+      <div class="map-head"><b>Plan</b><span>cliquez pour vous téléporter</span><button id="map-toggle" type="button" aria-label="Réduire le plan">–</button></div>
+      <canvas id="minimap"></canvas>
+    </div>
+  </div>
+
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>
