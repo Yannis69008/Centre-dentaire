@@ -19,8 +19,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/configure-pages@v5
-      - run: mkdir _site && cp -r index.html style.css src vendor _site/ && rm -rf _site/vendor/three/package.json
       - uses: actions/upload-pages-artifact@v3
-        with: { path: _site }
+        with: { path: dist }
       - id: dep
         uses: actions/deploy-pages@v4

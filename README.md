@@ -59,3 +59,5 @@ Géométrie statique fusionnée par matériau (~210 meshes), 9 lumières ponctue
 ## Licence
 
 Code du projet : MIT. Three.js : MIT (voir `vendor/three/LICENSE`).
+
+Version prête à déployer : `dist/index.html` (fichier unique, régénéré avec `bun build src/main.js`).
