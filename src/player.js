@@ -13,6 +13,7 @@ export class Player {
     this.radius = 0.26;
     this.vel = new THREE.Vector2();
     this.keys = new Set();
+    this.joy = { x: 0, y: 0 };
     this.enabled = false;
     this.locked = false;
     this.speed = 1.75; this.run = 3.2;
@@ -105,14 +106,14 @@ export class Player {
   update(dt) {
     if (!this.enabled) return;
     dt = Math.min(dt, 0.05);
-    const f = (this.keys.has('f') ? 1 : 0) - (this.keys.has('b') ? 1 : 0);
-    const s = (this.keys.has('r') ? 1 : 0) - (this.keys.has('l') ? 1 : 0);
+    const f = (this.keys.has('f') ? 1 : 0) - (this.keys.has('b') ? 1 : 0) + this.joy.y;
+    const s = (this.keys.has('r') ? 1 : 0) - (this.keys.has('l') ? 1 : 0) + this.joy.x;
     const sp = this.keys.has('run') ? this.run : this.speed;
     // direction monde : le regard est -z quand yaw = 0
     const sin = Math.sin(this.yaw), cos = Math.cos(this.yaw);
     let wx = (-sin) * f + cos * s, wz = (-cos) * f + (-sin) * s;
     const len = Math.hypot(wx, wz);
-    if (len > 0) { wx /= len; wz /= len; }
+    if (len > 0) { const k = Math.min(1, len) / len; wx *= k; wz *= k; }
     const tx = wx * sp, tz = wz * sp;
     const a = 1 - Math.exp(-dt * 12);
     this.vel.x += (tx - this.vel.x) * a; this.vel.y += (tz - this.vel.y) * a;

@@ -97,3 +97,16 @@ body.night { --acc2: #e5c9a0; }
 @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 
 body.clean #panel, body.clean #map-card, body.clean #panel-toggle, body.clean #room-chip { display: none !important; }
+
+/* ---- tactile ---- */
+#joy { position: fixed; width: 112px; height: 112px; margin: -56px 0 0 -56px; border-radius: 50%; border: 2px solid rgba(255,255,255,.35); background: rgba(255,255,255,.08); display: none; pointer-events: none; z-index: 5; }
+#joy.on { display: block; }
+#joy i { position: absolute; left: 36px; top: 36px; width: 40px; height: 40px; border-radius: 50%; background: rgba(61,216,192,.85); box-shadow: 0 2px 10px rgba(0,0,0,.4); }
+#act, #runbtn { position: fixed; right: max(16px, env(safe-area-inset-right)); width: 76px; height: 76px; border-radius: 50%; border: 2px solid rgba(255,255,255,.4); background: rgba(16,23,29,.7); color: #fff; font: 650 14px system-ui; z-index: 5; display: none; }
+#act { bottom: max(24px, env(safe-area-inset-bottom)); }
+#runbtn { bottom: calc(max(24px, env(safe-area-inset-bottom)) + 88px); width: 60px; height: 60px; font-size: 12px; }
+#runbtn.on { background: rgba(61,216,192,.9); color: #052a25; }
+body.touch[data-mode="visit"] #act, body.touch[data-mode="visit"] #runbtn { display: block; }
+body.touch #resume { display: none !important; }
+body.touch #crosshair { opacity: .5; }
+@media (max-width: 600px) { #panel { width: min(86vw, 300px); } #room-chip { transform: scale(.85); transform-origin: top left; } }

@@ -24,6 +24,8 @@ Puis ouvrir l'adresse dans Chrome, Edge ou Firefox récents (WebGL2). En ligne :
 | Ouvrir / fermer une porte | E ou clic |
 | Libérer la souris | Échap |
 
+**Téléphone / tablette** : joystick virtuel (moitié gauche), glisser à droite pour regarder, toucher une porte ou le bouton « Porte » pour l’ouvrir, bouton « Courir ».
+
 Panneau : modes **Visite** / **Vue aérienne**, téléportation par pièce, bascule toit / cloisons / étiquettes / portes automatiques, **jour / nuit**, qualité (Élevée / Moyenne / Éco). Mini-plan cliquable pour se téléporter.
 
 Paramètres d'URL : `?skip=1&tp=soin1&night=1&view=aerial&roof=0&walls=0&quality=low&ui=0`.

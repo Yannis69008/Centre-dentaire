@@ -54,7 +54,9 @@ export class UI {
     document.querySelectorAll('[data-mode]').forEach((b) => b.classList.toggle('on', b.dataset.mode === m));
     document.body.dataset.mode = m;
     const lbl = $('#mode-hint');
-    if (lbl) lbl.textContent = m === 'visit'
+    if (lbl) lbl.textContent = m === 'visit' && document.body.classList.contains('touch')
+      ? 'Joystick à gauche : se déplacer · Glisser à droite : regarder · Toucher une porte ou « Porte » : l\'ouvrir'
+      : m === 'visit'
       ? 'ZQSD / WASD : se déplacer · Souris : regarder · E ou clic : portes · Maj : courir'
       : 'Clic gauche glissé : tourner · Clic droit glissé : déplacer · Molette : zoom · Clic sur une porte : l\'ouvrir';
   }

@@ -4,6 +4,7 @@ import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
 import { buildCenter } from './build.js';
 import { Player } from './player.js';
 import { UI } from './ui.js';
+import { initTouch, isTouch } from './touch.js';
 import { W, D, WALL_H, teleports, roomAt, netArea, rooms } from './plan.js';
 import { verifyLayout, printReport } from './verify.js';
 
@@ -129,7 +130,7 @@ async function main() {
     mode: 'visit', night: false, roof: true, walls: true, labels: true, autodoors: true,
     quality: 'high', nightT: 0, started: false, prevRoof: true,
   };
-  try { const q = localStorage.getItem('dc_quality'); if (q) state.quality = q; } catch (e) { /* stockage indisponible */ }
+  try { const q = localStorage.getItem('dc_quality'); if (q) state.quality = q; else if (isTouch()) state.quality = 'medium'; } catch (e) { /* stockage indisponible */ }
   if (params.get('quality')) state.quality = params.get('quality');
 
   // ------------------------------------------------------------------ jour / nuit
@@ -205,8 +206,8 @@ async function main() {
   };
   ui.onNight = (n) => { state.night = n; };
   ui.onQuality = (q) => { setQuality(q); try { localStorage.setItem('dc_quality', q); } catch (e) { /* ignoré */ } };
-  ui.onStart = () => { state.started = true; if (state.mode === 'visit') player.lock(); };
-  ui.onResume = () => { if (state.mode === 'visit') player.lock(); };
+  ui.onStart = () => { state.started = true; if (state.mode === 'visit' && !player.noPointerLock) player.lock(); };
+  ui.onResume = () => { if (state.mode === 'visit' && !player.noPointerLock) player.lock(); };
   ui.onMinimapClick = (x, z) => {
     if (state.mode === 'visit') { player.teleport(x, z, player.yaw, 0); }
     else { orbit.target.set(x, 0, z); }
@@ -246,6 +247,7 @@ async function main() {
   let down = null;
   dom.addEventListener('pointerdown', (e) => { down = { x: e.clientX, y: e.clientY, t: performance.now() }; });
   dom.addEventListener('pointerup', (e) => {
+    if (e.pointerType === 'touch' && state.mode === 'visit') { down = null; return; }
     if (!down) return;
     const moved = Math.hypot(e.clientX - down.x, e.clientY - down.y);
     down = null;
@@ -268,6 +270,18 @@ async function main() {
     raycaster.setFromCamera(new THREE.Vector2(0, 0), camera);
     const hit = raycaster.intersectObjects(doorMeshes, false)[0];
     return hit ? doorOf.get(hit.object) : null;
+  }
+  function tapDoor(cx, cy) {
+    const r = dom.getBoundingClientRect();
+    raycaster.far = 4;
+    raycaster.setFromCamera(new THREE.Vector2(((cx - r.left) / r.width) * 2 - 1, -((cy - r.top) / r.height) * 2 + 1), camera);
+    const hit = raycaster.intersectObjects(doorMeshes, false)[0];
+    if (hit) { const d = doorOf.get(hit.object); if (d) toggleDoor(d); }
+  }
+  if (isTouch()) {
+    initTouch({ dom, player, state, onTap: tapDoor, onAction: () => interact() });
+    ui.panelOpen = false; document.getElementById('panel').classList.add('closed');
+    ui.mapOpen = false; document.getElementById('map-card').classList.add('closed');
   }
   function interact() { const d = aimedDoor(); if (d) toggleDoor(d); }
   window.addEventListener('keydown', (e) => {
